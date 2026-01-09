@@ -1,0 +1,14 @@
+<div class="task-card" [class.overdue]="isOverdue()" [class.completed]="isCompleted()">
+  <div class="task-content">
+    <h3 class="task-name">{{ task().taskName }}</h3>
+    <p class="task-description">{{ task().description }}</p>
+  </div>
+  <span class="status-badge" [class]="'status-' + task().status.toLowerCase()">
+      {{ task().status }}
+    </span>
+  <div class="task-actions">
+    <button class="btn-update" (click)="onUpdateStatus()" [disabled]="isCompleted()">
+      Update Status
+    </button>
+  </div>
+</div>

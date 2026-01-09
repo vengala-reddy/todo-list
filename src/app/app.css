@@ -1,0 +1,11 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background: #f5f7fa;
+}
+
+h2 {
+  text-align: center;
+  color: #4a6cf7;
+  margin: 0;
+}

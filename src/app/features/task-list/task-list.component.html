@@ -1,0 +1,132 @@
+<div class="task-list-container">
+  <header class="header">
+    <h1>Todo List</h1>
+  </header>
+  <section class="add-task-section">
+    <div class="section-header">
+      <h2>Add Task</h2>
+    </div>
+    <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="task-form">
+      <div class="form-group">
+        <label for="taskName">Task Name *</label>
+        <input
+          type="text"
+          name="taskName"
+          id="taskName"
+          formControlName="taskName"
+          placeholder="Task Name"
+          [class.error]="hasError('taskName')"
+        />
+        @if (hasError('taskName')) {
+        <span class="error-text">Task Name is required.</span>
+        }
+      </div>
+      <div class="form-group">
+        <label for="description">Description *</label>
+        <textarea
+          name="description"
+          id="description"
+          formControlName="description"
+          rows="3"
+          placeholder="Task Description"
+          [class.error]="hasError('description')"
+        ></textarea>
+        @if (hasError('description')) {
+        <span class="error-text">Description is required.</span>
+        }
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="startDate">Start Date *</label>
+          <input
+            type="date"
+            name="startDate"
+            id="startDate"
+            formControlName="startDate"
+            [class.error]="hasError('startDate')"
+          />
+        </div>
+        <div class="form-group">
+          <label for="endDate">End Date *</label>
+          <input
+            type="date"
+            name="endDate"
+            id="endDate"
+            formControlName="endDate"
+            [class.error]="hasError('endDate')"
+          />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="status">Status *</label>
+        <select
+          name="status"
+          id="status"
+          formControlName="status"
+          [class.error]="hasError('status')">
+          <option value="PENDING">Pending</option>
+          <option value="IN_PROGRESS">In Progress</option>
+          <option value="COMPLETED">Completed</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="effortRequired">Effort Required (hrs) *</label>
+        <input
+          type="number"
+          name="effortRequired"
+          id="effortRequired"
+          formControlName="effortRequired"
+          min="1"
+          placeholder="Effort Required in hours"
+          [class.error]="hasError('effortRequired')"
+        />
+        @if (hasError('effortRequired')) {
+        <span class="error-text">Effort must be greater than 0.</span>
+        }
+      </div>
+      <button type="submit" class="btn-primary" [disabled]="loading()">
+        @if(loading()) {
+          Adding...
+        } @else {
+          Add Task
+        }
+      </button>
+    </form>
+  </section>
+  <section class="task-list-section">
+    <div class="section-header">
+      <h2>Task List</h2>
+      @if (tasks().length > 0) {
+        <span class="task-count">{{tasks().length}} tasks | {{totalEffort()}} total hours</span>
+      }
+    </div>
+    @if (error()) {
+      <div class="error-banner">
+        {{ error() }}
+        <button (click)="loadTasks()">Retry</button>
+      </div>
+    }
+    @if (loading()) {
+      <div class="loading">
+        Loading tasks...
+      </div>
+    }
+    @if (!loading() && tasks().length > 0) {
+      <div class="task-table">
+        <div class="table-header">
+          <span class="col-name">Task Name</span>
+          <span class="col-status">Status</span>
+          <span class="col-action">Action</span>
+        </div>
+        @for (task of tasks(); track task.id) {
+          <app-task-card [task]="task" (statusUpdate)="onUpdateStatus($event)" />
+        }
+      </div>
+    }
+    @if (!loading() && tasks().length === 0 && !error) {
+      <div class="empty-state">
+        <p>No tasks yet. Add your first task above!</p>
+      </div>
+    }
+  </section>
+</div>
